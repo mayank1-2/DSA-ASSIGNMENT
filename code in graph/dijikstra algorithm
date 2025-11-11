@@ -1,0 +1,36 @@
+class Solution {
+  public:
+    vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
+        // Code here
+        vector<vector<pair<int,int>>> adj(V);
+        for(int k=0;k<edges.size();k++){
+            int i=edges[k][0];
+            int j=edges[k][1];
+            int w=edges[k][2];
+            adj[i].push_back({j,w});
+        }
+        set<pair<int,int>> st;
+        vector<int> dist(V,INT_MAX);
+        st.insert({0,src});
+        dist[src]=0;
+        while(!st.empty()){
+            auto it=*(st.begin());
+            int dis=it.first;
+            int node=it.second;
+            st.erase(it);
+            for(auto it:adj[node]){
+                int adjnode=it.first;
+                int edgeweight=it.second;
+                if(dis+edgeweight<dist[adjnode]){
+                    if(dist[adjnode]!=INT_MAX)
+                        st.erase({dist[adjnode],adjnode});
+                        dist[adjnode]=dis+edgeweight;
+                    st.insert({dist[adjnode],adjnode});
+                    
+                    }
+                
+            }
+        }
+        return dist;
+    }
+};
