@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    int minCost(vector<int>& height) {
+        // Code here
+        int n=height.size();
+        int previ=0;
+        int prev2i=0;
+        for(int i=1;i<n;i++){
+            int ls=previ+abs(height[i]-height[i-1]);
+            int rs=INT_MAX;
+            if(i>1)
+            rs=prev2i+abs(height[i]-height[i-2]);
+            int curi=min(ls,rs);
+            prev2i=previ;
+            previ=curi;
+        }
+        return previ;
+        
+        
+    }
+};
