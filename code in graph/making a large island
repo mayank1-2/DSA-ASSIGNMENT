@@ -1,0 +1,94 @@
+class disjoint{
+    public:
+    vector<int> rank,parent,size;
+    disjoint(int n){
+        rank.resize(n+1,0);
+        parent.resize(n+1);
+        size.resize(n+1);
+
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+            size[i]=1;
+
+        }
+    }
+    int find(int node){
+        if(node==parent[node]) return node;
+        return parent[node]=find(parent[node]);
+    }
+  
+    void unionsize(int u,int v){
+         int pu=find(u);
+        int pv=find(v);
+         if(pu==pv) return;
+         if(size[pu]<size[pv]){
+            parent[pu]=pv;
+            size[pv]+=size[pu];
+         }
+         else{
+              parent[pv]=pu;
+            size[pu]+=size[pv];
+         }
+
+    }
+};
+class Solution {
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+        int  n=grid.size();
+        disjoint ds(n*n);
+        for(int row=0;row<n;row++){
+            for(int col=0;col<n;col++){
+                if(grid[row][col]==0) continue;
+                int dr[]={1,0,0,-1};
+                int dc[]={0,-1,1,0};
+                for(int k=0;k<4;k++){
+                    int newr=row+dr[k];
+                    int newc=col+dc[k];
+                    if(newr>=0 &&newr<n && newc>=0 && newc<n && grid[newr][newc]==1){
+                        int node=row*n+col;
+                        int adjnode=newr*n+newc;
+                        ds.unionsize(node,adjnode);
+
+                    }
+
+
+                }
+            }
+
+        }
+        int mx=0;
+        for(int row=0;row<n;row++){
+            for(int col=0;col<n;col++){
+                   if(grid[row][col]==1) continue;
+                int dr[]={1,0,0,-1};
+                int dc[]={0,-1,1,0};
+                set<int> arr;
+                for(int k=0;k<4;k++){
+                    int newr=row+dr[k];
+                    int newc=col+dc[k];
+                    if(newr>=0 &&newr<n && newc>=0 && newc<n && grid[newr][newc]==1){
+                        int node=row*n+col;
+                        int adjnode=newr*n+newc;
+                      arr.insert(ds.find(adjnode));
+                        
+
+                    }
+
+
+                }
+                int total=0;
+              for(auto it:arr){
+                    total+=ds.size[it];
+                }
+                mx=max(mx,total+1);
+            }
+        }
+        for(int i=0;i<n*n;i++){
+            mx=max(mx,ds.size[ds.parent[i]]);
+        }
+        return mx;
+         
+        
+    }
+};
