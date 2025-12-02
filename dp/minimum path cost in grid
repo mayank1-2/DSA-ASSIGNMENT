@@ -1,0 +1,24 @@
+int fun(int i,int j,vector<vector<int>>& grid, vector<vector<int>>& moveCost,vector<vector<int>>& dp){
+    if(i==grid.size()-1) return grid[i][j];
+    if (dp[i][j]!=-1) return dp[i][j];
+    int val=grid[i][j];
+    int cost=1e9;
+    for(int k=0;k<grid[0].size();k++){
+        int point=val+moveCost[val][k]+fun(i+1,k,grid,moveCost,dp);
+             cost=min(cost,point);
+    }
+    return dp[i][j]=cost;
+    
+    
+}
+    int minPathCost(vector<vector<int>>& grid, vector<vector<int>>& moveCost) {
+        int n=grid.size();
+        int m=grid[0].size();
+       int mini=1e9;
+       vector<vector<int>> dp(n,vector<int>(m,-1));
+           for(int j=0;j<m;j++){
+                 mini=min(mini,fun(0,j,grid,moveCost,dp)); 
+           }
+        return mini;
+    }
+};
